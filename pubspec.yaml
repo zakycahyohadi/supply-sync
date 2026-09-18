@@ -57,6 +57,32 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  image: ^4.3.0
+
+# Ikon aplikasi dibuat dari assets/icon/ oleh flutter_launcher_icons.
+# PNG-nya sendiri dihasilkan `dart run tool/generate_icons.dart` dari
+# assets/icon/logo_source.jpeg. Setelah logo diganti, jalankan keduanya:
+#   dart run tool/generate_icons.dart
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets/icon/app_icon.png"
+
+  android: true
+  # Android memotong ikon jadi lingkaran/squircle: lapisan depan sudah diberi
+  # jarak di tool/generate_icons.dart supaya panahnya tidak kepotong.
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+
+  ios: true
+  # iOS menolak ikon yang punya alpha.
+  remove_alpha_ios: true
+
+  web:
+    generate: true
+    image_path: "assets/icon/app_icon.png"
+    background_color: "#FFFFFF"
+    theme_color: "#0B1F3A"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

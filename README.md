@@ -20,6 +20,16 @@ flutter analyze
 flutter test
 ```
 
+## Ikon aplikasi
+
+Logo ada di `assets/icon/logo_source.jpeg`. Kalau diganti, jalankan dua
+perintah ini supaya semua ukuran (Android, iOS, favicon web) ikut diperbarui:
+
+```bash
+dart run tool/generate_icons.dart
+dart run flutter_launcher_icons
+```
+
 ## Pratinjau web
 
 Setiap push ke `master` di-build dan di-deploy ke GitHub Pages lewat
