@@ -44,14 +44,7 @@ Setiap push ke `master` di-build dan di-deploy ke GitHub Pages lewat
 `.github/workflows/deploy-web.yml`. Di web, aplikasi tampil di dalam bingkai
 perangkat (paket `device_preview`).
 
-Ada pemilih perangkat di bagian atas halaman (dropdown + tombol orientasi).
-Pemilih itu bagian dari `web/index.html`, bukan widget Flutter: aplikasinya
-berjalan **di dalam** layar perangkat yang disimulasikan, jadi kontrol apa pun
-di widget tree akan ikut masuk ke dalam bingkai HP-nya. `device_preview` 3
-sendiri sudah tidak punya panel di dalam app — panelnya pindah ke Flutter
-DevTools, yang tidak ada di halaman yang sudah di-deploy.
-
-Perangkatnya juga bisa dipilih langsung lewat query URL:
+Perangkatnya bisa diganti lewat query URL:
 
 ```
 ?device=apple-iphone-17-pro          (bawaan)
@@ -59,9 +52,7 @@ Perangkatnya juga bisa dipilih langsung lewat query URL:
 ?device=apple-ipad-mini&orientation=landscape
 ```
 
-Daftar id lengkap ada di `DevicePresets.all`; pilihan di dropdown dijaga
-`test/device_preview_test.dart` supaya tidak menunjuk id yang tidak ada.
-Bingkai ini hanya menyala di
+Daftar id lengkap ada di `DevicePresets.all`. Bingkai ini hanya menyala di
 build web (`--dart-define=DEVICE_PREVIEW=true`); build Android/iOS rilis tidak
 terpengaruh.
 

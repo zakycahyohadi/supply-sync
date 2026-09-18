@@ -46,7 +46,6 @@ dependencies:
   firebase_ai: ^4.0.0
   firebase_app_check: ^0.4.8
   device_preview: ^3.0.0
-  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
