@@ -1,0 +1,67 @@
+# Build web lalu deploy ke GitHub Pages.
+#
+# Sekali lagi di Settings -> Pages, pilih Source: "GitHub Actions".
+name: Deploy web
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deploy terbaru yang menang; yang masih antre dibatalkan.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.47.4
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - run: flutter analyze
+
+      - run: flutter test
+
+      # base-href harus sesuai nama repo, karena Pages menyajikannya di
+      # https://<user>.github.io/<nama-repo>/
+      #
+      # DEVICE_PREVIEW=true menyalakan bingkai perangkat di build release.
+      # Catatan: flag --web-renderer sudah dihapus dari Flutter, jangan
+      # ditambahkan lagi ke sini.
+      - name: Build web
+        run: |
+          flutter build web \
+            --release \
+            --base-href "/${{ github.event.repository.name }}/" \
+            --dart-define=DEVICE_PREVIEW=true
+
+      # Supaya GitHub tidak memproses hasil build dengan Jekyll.
+      - run: touch build/web/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

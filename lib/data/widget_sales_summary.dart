@@ -35,7 +35,9 @@ String widgetCategoryFor(String? category) => switch (category) {
 /// }
 /// ```
 ///
-/// `insights` = catatan otomatis teratas untuk toko itu (teks pendek).
+/// `insights` = catatan teratas untuk toko itu (teks pendek). Untuk baris
+/// "Semua", hasil analisis AI ([aiInsights]) ditaruh paling atas lalu sisanya
+/// diisi catatan otomatis.
 /// `days` = tanggal pertama s/d terakhir yang punya data di bulan itu.
 /// `series` = omzet harian per kategori, sejajar dengan `days` (untuk grafik
 /// garis naik-turun). `stores` selalu berisi "Semua" lalu tiap toko di
@@ -43,6 +45,7 @@ String widgetCategoryFor(String? category) => switch (category) {
 Map<String, Object?> buildWidgetSalesSummary(
   List<SalesRecord> records, {
   List<StockLevel> stockLevels = const [],
+  List<Map<String, Object?>> aiInsights = const [],
   int maxInsights = 4,
 }) {
   final months = availableMonths(records);
@@ -56,7 +59,10 @@ Map<String, Object?> buildWidgetSalesSummary(
   final firstDay = monthRecords.map((r) => r.date.day).reduce(min);
   final lastDay = monthRecords.map((r) => r.date.day).reduce(max);
 
-  List<Map<String, Object?>> insightsFor(String? store) {
+  List<Map<String, Object?>> insightsFor(
+    String? store, {
+    List<Map<String, Object?>> extra = const [],
+  }) {
     final insights = buildInsights(
       records: records,
       stockLevels: stockLevels,
@@ -64,7 +70,12 @@ Map<String, Object?> buildWidgetSalesSummary(
       storeName: store,
     );
     return [
-      for (final insight in insights.take(maxInsights))
+      ...extra.take(maxInsights),
+      // Sisa slot diisi catatan otomatis, jadi widget tidak pernah kosong
+      // walau analisis AI gagal atau isinya sedikit.
+      for (final insight in insights.take(
+        maxInsights - extra.length.clamp(0, maxInsights),
+      ))
         {
           'emoji': insight.emoji,
           'text': insight.widgetText,
@@ -77,6 +88,7 @@ Map<String, Object?> buildWidgetSalesSummary(
     String name,
     Iterable<SalesRecord> rows, {
     String? insightStore,
+    List<Map<String, Object?>> extraInsights = const [],
   }) {
     final revenue = {for (final c in kWidgetCategories) c: 0};
     final units = {for (final c in kWidgetCategories) c: 0};
@@ -107,7 +119,7 @@ Map<String, Object?> buildWidgetSalesSummary(
         for (final category in kWidgetCategories)
           {'category': category, 'values': daily[category]},
       ],
-      'insights': insightsFor(insightStore),
+      'insights': insightsFor(insightStore, extra: extraInsights),
     };
   }
 
@@ -115,7 +127,9 @@ Map<String, Object?> buildWidgetSalesSummary(
     'month': formatMonthYear(month),
     'days': [for (var day = firstDay; day <= lastDay; day++) '$day'],
     'stores': [
-      storeSummary(kWidgetAllStores, monthRecords),
+      // Analisis AI dibuat untuk semua toko sekaligus, jadi hanya dipasang
+      // di baris "Semua".
+      storeSummary(kWidgetAllStores, monthRecords, extraInsights: aiInsights),
       for (final store in kStores)
         storeSummary(
           store,

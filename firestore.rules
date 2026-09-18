@@ -82,6 +82,20 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Hasil analisis AI. ID dokumen = sidik jari data yang dianalisis, jadi
+    // begitu ada upload baru id-nya berganti dan analisis dibuat ulang.
+    // Isinya ringkasan omzet semua toko, jadi hanya admin pusat.
+    match /ai_forecasts/{fingerprint} {
+      allow read: if isCentralAdmin();
+
+      allow create: if isCentralAdmin()
+        && request.resource.data.model is string
+        && request.resource.data.ringkasan is string;
+
+      // Hasil yang sudah dibuat tidak pernah diubah.
+      allow update, delete: if false;
+    }
+
     // Pengiriman barang dari pusat ke toko.
     match /shipments/{shipmentId} {
       allow read: if isCentralAdmin() || isStoreAdminOf(resource.data.store_name);

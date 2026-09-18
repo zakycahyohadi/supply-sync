@@ -1,23 +1,64 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'data/ai/ai_forecast_repository.dart';
+import 'data/ai/gemini_forecast_repository.dart';
 import 'data/auth_repository.dart';
 import 'data/firebase/firebase_auth_repository.dart';
 import 'data/firebase/firestore_sales_repository.dart';
 import 'data/sales_repository.dart';
+import 'device_preview_boot.dart';
 import 'firebase_options.dart';
 import 'home_widget_sync.dart';
 import 'screens/splash_screen.dart';
 import 'theme/app_colors.dart';
 
+/// Site key reCAPTCHA v3 untuk App Check di web.
+///
+/// Ambil dari Firebase Console -> App Check -> app Web. Selama masih kosong,
+/// App Check di web dilewati (Android & iOS tetap jalan).
+const kRecaptchaSiteKey = '';
+
 Future<void> main() async {
+  // Sebelum binding lain dibuat: device_preview memasang bindingnya sendiri.
+  initDevicePreview();
   WidgetsFlutterBinding.ensureInitialized();
+  await applyPreviewDeviceFromUrl();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _activateAppCheck();
   AuthRepository.instance = FirebaseAuthRepository();
   SalesRepository.instance = FirestoreSalesRepository();
+  AiForecastRepository.instance = GeminiForecastRepository();
   HomeWidgetSync.init();
   runApp(const MyApp());
+}
+
+/// App Check memastikan hanya aplikasi asli yang boleh memanggil Firebase AI
+/// Logic, jadi tidak ada API key yang perlu ditaruh di dalam aplikasi.
+///
+/// Wajib untuk Firebase AI Logic mulai 2 November 2026.
+Future<void> _activateAppCheck() async {
+  try {
+    await FirebaseAppCheck.instance.activate(
+      // Saat debug, token debug harus didaftarkan sekali di Firebase Console
+      // (lihat log saat app jalan pertama kali).
+      providerAndroid: kDebugMode
+          ? const AndroidDebugProvider()
+          : const AndroidPlayIntegrityProvider(),
+      providerApple: kDebugMode
+          ? const AppleDebugProvider()
+          : const AppleDeviceCheckProvider(),
+      providerWeb: kIsWeb && kRecaptchaSiteKey.isNotEmpty
+          ? ReCaptchaV3Provider(kRecaptchaSiteKey)
+          : null,
+    );
+  } on Object {
+    // App Check belum disiapkan di console. Aplikasi tetap jalan seperti
+    // biasa; hanya analisis AI yang nanti ditolak server.
+  }
 }
 
 class MyApp extends StatelessWidget {

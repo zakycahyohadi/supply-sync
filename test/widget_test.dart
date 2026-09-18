@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:supply_sync/data/ai/ai_forecast_repository.dart';
 import 'package:supply_sync/data/auth_repository.dart';
 import 'package:supply_sync/data/notifications.dart';
 import 'package:supply_sync/data/sales_repository.dart';
@@ -17,6 +18,7 @@ import 'package:supply_sync/utils/date_format.dart';
 import 'package:supply_sync/widgets/dashboard/stock_level_tile.dart';
 import 'package:supply_sync/widgets/dashboard/upload_list_tile.dart';
 
+import 'support/fake_ai_forecast_repository.dart';
 import 'support/fake_auth_repository.dart';
 
 const _phoneSizes = {'HP normal': Size(390, 844), 'HP kecil': Size(360, 640)};
@@ -81,6 +83,8 @@ void main() {
   setUp(() {
     AuthRepository.instance = FakeAuthRepository();
     SalesRepository.instance = InMemorySalesRepository();
+    // Analisis AI dimatikan by default; test yang butuh memasang fake sendiri.
+    AiForecastRepository.instance = UnavailableAiForecastRepository();
     NotificationReadStore.instance.reset();
   });
 
@@ -473,6 +477,50 @@ void main() {
     await _scrollTo(tester, find.text('iPhone Air'), 200);
     expect(find.text('Rp19.999.000'), findsOneWidget);
     expect(find.text('Belum tersedia di toko'), findsWidgets);
+  });
+
+  for (final entry in _phoneSizes.entries) {
+    testWidgets('admin pusat: analisis AI tampil di ringkasan (${entry.key})', (
+      tester,
+    ) async {
+      _setScreenSize(tester, entry.value);
+      final ai = FakeAiForecastRepository();
+      AiForecastRepository.instance = ai;
+
+      await _openApp(tester);
+      await _login(tester, 'pusat@supply.id', 'pusat123');
+
+      await _scrollTo(tester, find.text('Analisis AI'));
+      expect(find.text('Perkiraan bulan depan'), findsOneWidget);
+      expect(find.text('Rp268 jt'), findsOneWidget);
+      expect(find.text('Keyakinan sedang'), findsOneWidget);
+      // Yang turun ditaruh sebelum yang naik.
+      expect(find.text('MacBook Air M4 turun 40%'), findsOneWidget);
+      expect(find.text('iPhone 17 Pro Max · Toko 1'), findsOneWidget);
+
+      // Yang dikirim ke Gemini adalah ringkasan, bukan baris penjualan.
+      expect(ai.lastPayload, isNotNull);
+      expect(ai.lastPayload!['bulan_ini'], isA<Map<String, Object?>>());
+      expect(ai.lastPayload!.keys, isNot(contains('rows')));
+      // Satu kali panggilan saja untuk data yang sama.
+      expect(ai.calledKeys.toSet(), hasLength(1));
+    });
+  }
+
+  testWidgets('analisis AI gagal: dashboard tetap jalan', (tester) async {
+    _setScreenSize(tester, const Size(390, 844));
+    AiForecastRepository.instance = FakeAiForecastRepository(
+      error: 'Kuota AI hari ini sudah habis.',
+    );
+
+    await _openApp(tester);
+    await _login(tester, 'pusat@supply.id', 'pusat123');
+
+    await _scrollTo(tester, find.text('Analisis AI'));
+    expect(find.text('Kuota AI hari ini sudah habis.'), findsOneWidget);
+    // Catatan otomatis (non-AI) tetap ada.
+    await _scrollTo(tester, find.text('Peringatan stok'));
+    expect(find.text('Insight penjualan'), findsOneWidget);
   });
 
   testWidgets('logout kembali ke halaman publik', (tester) async {

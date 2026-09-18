@@ -83,7 +83,6 @@ struct StoreSales: Decodable {
 
 struct SalesSummary: Decodable {
   let month: String?
-  let updated: String?
   let days: [String]
   let stores: [StoreSales]
 
@@ -122,7 +121,6 @@ struct SalesSummary: Decodable {
     }
     return SalesSummary(
       month: "September 2026",
-      updated: nil,
       days: days,
       stores: [
         store("Semua", "Rp5,4 M", 1.0),
@@ -258,7 +256,7 @@ struct SupplySyncWidgetView: View {
   }
 
   private var caption: String {
-    entry.isSample ? "Data contoh" : (entry.summary.updated ?? "")
+    entry.isSample ? "Data contoh" : ""
   }
 
   var body: some View {
@@ -277,7 +275,6 @@ struct SupplySyncWidgetView: View {
         TrendCard(
           sales: sales,
           days: entry.summary.days,
-          month: entry.summary.month ?? "",
           caption: caption
         )
       }
@@ -311,7 +308,6 @@ struct SupplySyncWidgetView: View {
         TrendCard(
           sales: sales,
           days: entry.summary.days,
-          month: entry.summary.month ?? "",
           caption: ""
         )
         .frame(maxHeight: .infinity)
@@ -426,7 +422,6 @@ private struct TrendPoint: Identifiable {
 private struct TrendCard: View {
   let sales: StoreSales
   let days: [String]
-  let month: String
   let caption: String
 
   private var points: [TrendPoint] {
@@ -487,7 +482,7 @@ private struct TrendCard: View {
   private var header: some View {
     HStack(alignment: .top) {
       VStack(alignment: .leading, spacing: 0) {
-        Text("OMZET HARIAN · \(month.uppercased())")
+        Text("OMZET BULANAN")
           .font(.system(size: 7.5, weight: .bold))
           .tracking(0.5)
           .foregroundStyle(.white.opacity(0.6))

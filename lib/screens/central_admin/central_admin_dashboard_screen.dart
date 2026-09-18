@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter/scheduler.dart';
+
+import '../../data/ai/ai_forecast_repository.dart';
+import '../../data/ai/forecast_payload.dart';
+import '../../data/ai/forecast_widget_insights.dart';
 import '../../data/insights_engine.dart';
 import '../../data/sales_analytics.dart';
 import '../../data/sales_repository.dart';
 import '../../data/sales_widget_publisher.dart';
+import '../../models/ai_forecast.dart';
 import '../../models/app_user.dart';
 import '../../models/catalog_product.dart';
 import '../../models/sales_upload.dart';
@@ -14,6 +20,7 @@ import '../../utils/currency.dart';
 import '../../utils/date_format.dart';
 import '../../widgets/charts/ranked_bars.dart';
 import '../../widgets/charts/store_trend_chart.dart';
+import '../../widgets/dashboard/ai_forecast_card.dart';
 import '../../widgets/dashboard/dashboard_app_bar.dart';
 import '../../widgets/dashboard/insight_list.dart';
 import '../../widgets/dashboard/month_dropdown.dart';
@@ -62,6 +69,16 @@ class _CentralAdminDashboardScreenState
   /// Null = bulan terbaru yang punya data.
   DateTime? _selectedMonth;
 
+  /// Analisis AI untuk data yang sedang ditampilkan.
+  ///
+  /// [_forecastKey] adalah sidik jari data yang sedang/sudah dianalisis.
+  /// Selama sidik jarinya sama, Gemini tidak dipanggil lagi — termasuk saat
+  /// pindah tab atau ganti filter toko.
+  String? _forecastKey;
+  AiForecast? _forecast;
+  String? _forecastError;
+  bool _forecastLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +91,44 @@ class _CentralAdminDashboardScreenState
     _shipments = repository.watchShipments(
       since: DateTime(now.year, now.month, now.day - kDashboardShipmentDays),
     );
+  }
+
+  /// Mulai analisis kalau datanya berubah. Aman dipanggil dari `build`:
+  /// panggilan sebenarnya dijadwalkan setelah frame selesai, pola yang sama
+  /// dengan [SalesWidgetPublisher.publishLater].
+  void _loadForecastLater(Map<String, Object?> payload) {
+    final key = forecastFingerprint(payload);
+    if (key == _forecastKey) return;
+    _forecastKey = key;
+    _forecast = null;
+    _forecastError = null;
+    _forecastLoading = true;
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final forecast = await AiForecastRepository.instance.forecast(
+          payload: payload,
+          cacheKey: key,
+        );
+        // Data bisa berubah lagi selagi menunggu; hasil yang basi dibuang.
+        if (!mounted || _forecastKey != key) return;
+        setState(() {
+          _forecast = forecast;
+          _forecastLoading = false;
+        });
+      } on Object catch (error) {
+        if (!mounted || _forecastKey != key) return;
+        setState(() {
+          _forecastError = error is AiForecastException
+              ? error.message
+              : 'Analisis AI gagal. Periksa koneksi internet.';
+          _forecastLoading = false;
+        });
+      }
+    });
+  }
+
+  void _retryForecast() {
+    setState(() => _forecastKey = null);
   }
 
   void _selectStore(String? store) => setState(() => _selectedStore = store);
@@ -148,10 +203,30 @@ class _CentralAdminDashboardScreenState
               month: month,
               storeName: _selectedStore,
             );
+            // Analisis AI selalu memakai data semua toko, bukan filter yang
+            // sedang aktif, supaya hasilnya sama untuk semua tampilan.
+            if (allStores.hasData) {
+              _loadForecastLater(
+                buildForecastPayload(
+                  analytics: allStores,
+                  ruleInsights: buildInsights(
+                    records: records,
+                    stockLevels: allStores.stockLevels,
+                    month: month,
+                  ),
+                ),
+              );
+            }
+            final forecast = _forecast;
+
             // Widget home screen selalu memakai data terbaru semua toko.
+            // Hasil AI ditaruh paling atas; sisanya catatan otomatis.
             SalesWidgetPublisher.publishLater(
               records,
               stockLevels: allStores.stockLevels,
+              aiInsights: forecast == null
+                  ? const []
+                  : aiWidgetInsights(forecast),
             );
 
             return Scaffold(
@@ -164,6 +239,10 @@ class _CentralAdminDashboardScreenState
                     user: widget.user,
                     analytics: analytics,
                     insights: insights,
+                    forecast: forecast,
+                    forecastLoading: _forecastLoading,
+                    forecastError: _forecastError,
+                    onRetryForecast: _retryForecast,
                     months: months,
                     onMonthChanged: _selectMonth,
                     selectedStore: _selectedStore,
@@ -323,6 +402,10 @@ class _OverviewTab extends StatelessWidget {
     required this.user,
     required this.analytics,
     required this.insights,
+    required this.forecast,
+    required this.forecastLoading,
+    required this.forecastError,
+    required this.onRetryForecast,
     required this.months,
     required this.onMonthChanged,
     required this.selectedStore,
@@ -334,6 +417,10 @@ class _OverviewTab extends StatelessWidget {
   final AppUser user;
   final SalesAnalytics analytics;
   final List<Insight> insights;
+  final AiForecast? forecast;
+  final bool forecastLoading;
+  final String? forecastError;
+  final VoidCallback onRetryForecast;
   final List<DateTime> months;
   final ValueChanged<DateTime> onMonthChanged;
   final String? selectedStore;
@@ -418,6 +505,13 @@ class _OverviewTab extends StatelessWidget {
                 icon: Icons.warning_amber_rounded,
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          AiForecastCard(
+            forecast: forecast,
+            isLoading: forecastLoading,
+            errorMessage: forecastError,
+            onRetry: onRetryForecast,
           ),
           const SizedBox(height: 16),
           SectionCard(
