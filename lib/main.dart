@@ -26,7 +26,6 @@ Future<void> main() async {
   // Sebelum binding lain dibuat: device_preview memasang bindingnya sendiri.
   initDevicePreview();
   WidgetsFlutterBinding.ensureInitialized();
-  await applyPreviewDeviceFromUrl();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _activateAppCheck();
   AuthRepository.instance = FirebaseAuthRepository();
