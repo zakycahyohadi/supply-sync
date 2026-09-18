@@ -140,9 +140,7 @@ class AiForecast {
   /// dari schema.
   factory AiForecast.fromJson(Map<String, Object?> json) => AiForecast(
     summary: _string(json['ringkasan']),
-    trends: [
-      for (final trend in _list(json['tren'])) AiTrend.fromJson(trend),
-    ],
+    trends: [for (final trend in _list(json['tren'])) AiTrend.fromJson(trend)],
     outlook: AiOutlook.fromJson(_map(json['forecast_bulan_depan'])),
     restocks: [
       for (final restock in _list(json['produk_perlu_dikirim']))

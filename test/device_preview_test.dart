@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:supply_sync/device_preview_boot.dart';
@@ -33,16 +35,27 @@ void main() {
     expect(previewSimulationFromUrl(url('?device=nokia-3310')), isNull);
   });
 
-  test('semua id di daftar preset bisa dipakai', () {
-    for (final id in [
-      'apple-iphone-17-pro',
-      'apple-iphone-se-3',
-      'google-pixel-9',
-      'samsung-galaxy-s25',
-      'apple-ipad-mini',
-      'desktop-small',
-    ]) {
-      expect(previewPresetById(id), isNotNull, reason: id);
+  test('perangkat bawaan ada di katalog', () {
+    expect(previewPresetById(kDefaultPreviewDevice), isNotNull);
+  });
+
+  test('semua pilihan di pemilih perangkat web ada di katalog', () {
+    // Daftar perangkat ditulis dua kali: di web/index.html (untuk dropdown)
+    // dan di DevicePresets (untuk simulasinya). Test ini yang menjaga supaya
+    // tidak ada pilihan yang menunjuk id tidak ada — gejalanya halus:
+    // dropdown-nya kelihatan normal, tapi dipilih pun tidak terjadi apa-apa.
+    final html = File('web/index.html').readAsStringSync();
+    final ids = RegExp(
+      r'<option value="([a-z0-9-]+)"',
+    ).allMatches(html).map((match) => match.group(1)!).toList();
+
+    expect(ids, hasLength(greaterThan(5)), reason: 'pilihan tidak terbaca');
+    for (final id in ids) {
+      expect(
+        previewPresetById(id),
+        isNotNull,
+        reason: '"$id" ada di web/index.html tapi tidak ada di DevicePresets',
+      );
     }
   });
 }
