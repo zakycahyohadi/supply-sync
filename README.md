@@ -34,6 +34,10 @@ dart run tool/generate_icons.dart
 dart run flutter_launcher_icons
 ```
 
+> Setelah `flutter_launcher_icons`, periksa `ios/Runner.xcodeproj/project.pbxproj`.
+> Versi 0.14.4 keliru menimpa `ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS`
+> menjadi `AppIcon`; nilainya harus tetap `YES`.
+
 ## Pratinjau web
 
 Setiap push ke `master` di-build dan di-deploy ke GitHub Pages lewat
