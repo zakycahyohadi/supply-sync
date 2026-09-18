@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../data/sales_repository.dart';
@@ -8,6 +10,7 @@ import '../widgets/login_dialog.dart';
 import '../widgets/product_card.dart';
 import 'app_navigation.dart';
 import '../widgets/app_header.dart';
+import '../widgets/chat/chat_sheet.dart';
 import '../widgets/dashboard/spotlight.dart';
 
 /// Halaman utama untuk customer/public, bisa diakses tanpa login.
@@ -42,11 +45,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     openHomeForUser(context, user);
   }
 
-  void _openWhatsApp() {
-    // TODO: buka chat WhatsApp pakai package url_launcher, contoh:
-    //   final uri = Uri.parse('https://wa.me/628xxxxxxxxxx?text=Halo%20Supply%20Sync');
-    //   await launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
+  void _openChat() => unawaited(showChatSheet(context));
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +163,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _openWhatsApp,
-        tooltip: 'Chat via WhatsApp',
+        onPressed: _openChat,
+        tooltip: 'Chat dengan kami',
         backgroundColor: AppColors.whatsapp,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),
