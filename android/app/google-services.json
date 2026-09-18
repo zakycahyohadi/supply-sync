@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "982252233817",
+    "project_id": "retail-insight-e7e4f",
+    "storage_bucket": "retail-insight-e7e4f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982252233817:android:ae6bc224cf7a33a3cfbd48",
+        "android_client_info": {
+          "package_name": "com.retailinsight.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoBlDZyAiE-KdvVpggmfAFaaqCGBTnpls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,473 @@
+[
+  {
+    "code": "IP11P",
+    "name": "iPhone 11 Pro",
+    "category": "iPhone",
+    "price": 9999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP11PM",
+    "name": "iPhone 11 Pro Max",
+    "category": "iPhone",
+    "price": 11999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP12P",
+    "name": "iPhone 12 Pro",
+    "category": "iPhone",
+    "price": 12999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP12PM",
+    "name": "iPhone 12 Pro Max",
+    "category": "iPhone",
+    "price": 14999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP13P",
+    "name": "iPhone 13 Pro",
+    "category": "iPhone",
+    "price": 14999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP13PM",
+    "name": "iPhone 13 Pro Max",
+    "category": "iPhone",
+    "price": 16999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP14P",
+    "name": "iPhone 14 Pro",
+    "category": "iPhone",
+    "price": 16999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP14PM",
+    "name": "iPhone 14 Pro Max",
+    "category": "iPhone",
+    "price": 18999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP15P",
+    "name": "iPhone 15 Pro",
+    "category": "iPhone",
+    "price": 18999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP15PM",
+    "name": "iPhone 15 Pro Max",
+    "category": "iPhone",
+    "price": 20999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP16P",
+    "name": "iPhone 16 Pro",
+    "category": "iPhone",
+    "price": 19999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP16PM",
+    "name": "iPhone 16 Pro Max",
+    "category": "iPhone",
+    "price": 21999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP17P",
+    "name": "iPhone 17 Pro",
+    "category": "iPhone",
+    "price": 21999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP17PM",
+    "name": "iPhone 17 Pro Max",
+    "category": "iPhone",
+    "price": 24999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP18P",
+    "name": "iPhone 18 Pro",
+    "category": "iPhone",
+    "price": 23999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "IP18PM",
+    "name": "iPhone 18 Pro Max",
+    "category": "iPhone",
+    "price": 25999000,
+    "min_stock": 4,
+    "image_url": null,
+    "is_active": true
+  },
+
+  {
+    "code": "M1",
+    "name": "MacBook Air M1",
+    "category": "MacBook",
+    "price": 12999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M2",
+    "name": "MacBook Air M2",
+    "category": "MacBook",
+    "price": 14999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M3",
+    "name": "MacBook Air M3",
+    "category": "MacBook",
+    "price": 16999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M4",
+    "name": "MacBook Air M4",
+    "category": "MacBook",
+    "price": 17999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M5",
+    "name": "MacBook Air M5",
+    "category": "MacBook",
+    "price": 19999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M1P",
+    "name": "MacBook Pro 14 M1 Pro",
+    "category": "MacBook",
+    "price": 23999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M2P",
+    "name": "MacBook Pro 14 M2 Pro",
+    "category": "MacBook",
+    "price": 25999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M3P",
+    "name": "MacBook Pro 14 M3 Pro",
+    "category": "MacBook",
+    "price": 27999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M4P",
+    "name": "MacBook Pro 14 M4 Pro",
+    "category": "MacBook",
+    "price": 29999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M5P",
+    "name": "MacBook Pro 14 M5 Pro",
+    "category": "MacBook",
+    "price": 31999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M1P16",
+    "name": "MacBook Pro 16 M1 Pro",
+    "category": "MacBook",
+    "price": 29999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M2P16",
+    "name": "MacBook Pro 16 M2 Pro",
+    "category": "MacBook",
+    "price": 31999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M3P16",
+    "name": "MacBook Pro 16 M3 Pro",
+    "category": "MacBook",
+    "price": 34999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M4P16",
+    "name": "MacBook Pro 16 M4 Pro",
+    "category": "MacBook",
+    "price": 36999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "M5P16",
+    "name": "MacBook Pro 16 M5 Pro",
+    "category": "MacBook",
+    "price": 39999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+
+  {
+    "code": "AW8",
+    "name": "Apple Watch Series 8",
+    "category": "Apple Watch",
+    "price": 6999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AW9",
+    "name": "Apple Watch Series 9",
+    "category": "Apple Watch",
+    "price": 7999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AW10",
+    "name": "Apple Watch Series 10",
+    "category": "Apple Watch",
+    "price": 8999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AWS11",
+    "name": "Apple Watch Series 11",
+    "category": "Apple Watch",
+    "price": 9999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AWSE2",
+    "name": "Apple Watch SE 2",
+    "category": "Apple Watch",
+    "price": 4999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AWSE3",
+    "name": "Apple Watch SE 3",
+    "category": "Apple Watch",
+    "price": 5999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AWU2",
+    "name": "Apple Watch Ultra 2",
+    "category": "Apple Watch",
+    "price": 14999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AWU3",
+    "name": "Apple Watch Ultra 3",
+    "category": "Apple Watch",
+    "price": 16999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+
+  {
+    "code": "AP4",
+    "name": "AirPods 4",
+    "category": "Audio",
+    "price": 2499000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "AP4A",
+    "name": "AirPods 4 ANC",
+    "category": "Audio",
+    "price": 3299000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "APP2",
+    "name": "AirPods Pro 2",
+    "category": "Audio",
+    "price": 3999000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "APM",
+    "name": "AirPods Max",
+    "category": "Audio",
+    "price": 8999000,
+    "min_stock": 3,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "APC",
+    "name": "Apple Pencil USB-C",
+    "category": "Accessories",
+    "price": 1999000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "APP",
+    "name": "Apple Pencil Pro",
+    "category": "Accessories",
+    "price": 2999000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "MM",
+    "name": "Magic Mouse",
+    "category": "Accessories",
+    "price": 1499000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "MK",
+    "name": "Magic Keyboard",
+    "category": "Accessories",
+    "price": 2499000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "MT",
+    "name": "Magic Trackpad",
+    "category": "Accessories",
+    "price": 2499000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "MSC",
+    "name": "MagSafe Charger",
+    "category": "Accessories",
+    "price": 1199000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "PA20",
+    "name": "20W USB-C Power Adapter",
+    "category": "Accessories",
+    "price": 499000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "PA30",
+    "name": "30W USB-C Power Adapter",
+    "category": "Accessories",
+    "price": 799000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  },
+  {
+    "code": "PA35D",
+    "name": "35W Dual USB-C Power Adapter",
+    "category": "Accessories",
+    "price": 999000,
+    "min_stock": 5,
+    "image_url": null,
+    "is_active": true
+  }
+]

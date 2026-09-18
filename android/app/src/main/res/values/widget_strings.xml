@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_title">Supply Sync</string>
+    <string name="widget_description">Lihat dan tambah counter langsung dari home screen</string>
+    <string name="widget_updated_at">Diperbarui %1$s</string>
+    <string name="widget_no_data">Belum ada data</string>
+    <string name="widget_increment">Tambah</string>
+</resources>

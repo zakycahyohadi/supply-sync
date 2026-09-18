@@ -1,0 +1,106 @@
+rules_version = '2';
+
+// Aturan akses database Retail Insight.
+// Deploy: firebase deploy --only firestore
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Daftar akun & role. SAMAKAN dengan lib/data/user_directory.dart.
+    function centralAdmins() {
+      return ['pusat@supply.id'];
+    }
+    function storeAdmins() {
+      return {
+        'toko1@supply.id': 'Toko 1',
+        'toko2@supply.id': 'Toko 2'
+      };
+    }
+
+    function email() {
+      return request.auth.token.email;
+    }
+    function isCentralAdmin() {
+      return request.auth != null && email() in centralAdmins();
+    }
+    function isStoreAdminOf(storeName) {
+      return request.auth != null
+        && email() in storeAdmins()
+        && storeAdmins()[email()] == storeName;
+    }
+
+    function myStore() {
+      return storeAdmins()[email()];
+    }
+
+    function isValidProduct(data, code) {
+      return data.code == code
+        && data.name is string && data.name.size() > 0
+        && data.category in ['iPhone', 'MacBook', 'Apple Watch', 'Audio', 'Accessories']
+        && data.price is int && data.price >= 0
+        && data.min_stock is int && data.min_stock >= 0
+        && data.is_active is bool
+        && (data.image_url == null || data.image_url is string);
+    }
+
+    // Katalog produk. Semua orang boleh baca (dipakai homepage publik).
+    match /products/{code} {
+      allow read: if true;
+
+      allow create: if isCentralAdmin()
+        && isValidProduct(request.resource.data, code);
+
+      // Admin pusat mengubah data katalog (bukan stok).
+      // Admin toko hanya memperbarui stok tokonya sendiri.
+      allow update: if (isCentralAdmin()
+          && isValidProduct(request.resource.data, code)
+          && request.resource.data.get('stock_by_store', {})
+            == resource.data.get('stock_by_store', {}))
+        || (request.auth != null
+          && email() in storeAdmins()
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['stock_by_store'])
+          && request.resource.data.get('stock_by_store', {})
+            .diff(resource.data.get('stock_by_store', {}))
+            .affectedKeys().hasOnly([myStore()]));
+
+      allow delete: if false;
+    }
+
+    // Satu dokumen = satu file XLSX yang sudah diubah jadi JSON.
+    match /uploads/{uploadId} {
+      allow read: if isCentralAdmin() || isStoreAdminOf(resource.data.store_name);
+
+      allow create: if isStoreAdminOf(request.resource.data.store_name)
+        && request.resource.data.uploaded_by_email == email()
+        && request.resource.data.rows is list
+        && request.resource.data.rows.size() > 0
+        && request.resource.data.rows.size() <= 2000
+        && request.resource.data.row_count == request.resource.data.rows.size();
+
+      // Data lama tidak diubah; upload baru untuk tanggal yang sama
+      // menggantikannya saat dibaca.
+      allow update, delete: if false;
+    }
+
+    // Pengiriman barang dari pusat ke toko.
+    match /shipments/{shipmentId} {
+      allow read: if isCentralAdmin() || isStoreAdminOf(resource.data.store_name);
+
+      allow create: if isCentralAdmin()
+        && request.resource.data.status == 'in_transit'
+        && request.resource.data.created_by_email == email()
+        && request.resource.data.items is list
+        && request.resource.data.items.size() > 0;
+
+      // Admin toko hanya boleh mengubah status jadi "received".
+      allow update: if isStoreAdminOf(resource.data.store_name)
+        && resource.data.status == 'in_transit'
+        && request.resource.data.status == 'received'
+        && request.resource.data.received_by_email == email()
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'received_by', 'received_by_email', 'received_at']);
+
+      allow delete: if false;
+    }
+  }
+}

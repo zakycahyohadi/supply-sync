@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sama dengan AppColors.navy; latar layar pembuka sebelum Flutter tampil. -->
+    <color name="splash_background">#0B1F3A</color>
+</resources>
