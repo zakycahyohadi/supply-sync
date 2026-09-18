@@ -22,8 +22,12 @@ flutter test
 
 ## Ikon aplikasi
 
-Logo ada di `assets/icon/logo_source.jpeg`. Kalau diganti, jalankan dua
-perintah ini supaya semua ukuran (Android, iOS, favicon web) ikut diperbarui:
+Semua tempat yang menampilkan logo — ikon aplikasi, layar pembuka Android &
+iOS, splash screen di dalam aplikasi, header, dan widget home screen —
+dibuat dari satu berkas: `assets/icon/logo_source.jpeg`.
+
+Kalau logonya diganti, jalankan dua perintah ini supaya semuanya ikut
+diperbarui:
 
 ```bash
 dart run tool/generate_icons.dart

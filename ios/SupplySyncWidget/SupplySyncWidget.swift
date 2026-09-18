@@ -285,7 +285,7 @@ struct SupplySyncWidgetView: View {
   private var largeLayout: some View {
     VStack(spacing: 10) {
       HStack(spacing: 8) {
-        brandMark
+        brandMark(size: 24)
         Text("Supply Sync")
           .font(.system(size: 15, weight: .heavy))
           .foregroundStyle(.white)
@@ -316,48 +316,28 @@ struct SupplySyncWidgetView: View {
     }
   }
 
-  private var brandMark: some View {
-    RoundedRectangle(cornerRadius: 8, style: .continuous)
-      .fill(
-        LinearGradient(
-          colors: [.white.opacity(0.3), .white.opacity(0.08)],
-          startPoint: .topLeading,
-          endPoint: .bottomTrailing
-        )
-      )
-      .overlay(
-        RoundedRectangle(cornerRadius: 8, style: .continuous)
-          .strokeBorder(.white.opacity(0.22), lineWidth: 0.5)
-      )
-      .overlay(
-        Image(systemName: "chart.xyaxis.line")
-          .font(.system(size: 12, weight: .bold))
-          .foregroundStyle(.white)
-      )
-      .frame(width: 24, height: 24)
+  /// Logo aplikasi. Gambarnya sudah termasuk kotak putih membulat, jadi
+  /// tidak perlu latar tambahan.
+  private func brandMark(size: CGFloat) -> some View {
+    Group {
+      if let logo = BrandMark.image {
+        logo
+          .resizable()
+          .interpolation(.high)
+          .scaledToFit()
+      } else {
+        // Berkas gagal dibaca: kotak kosong, bukan logo lama.
+        RoundedRectangle(cornerRadius: size * 0.23, style: .continuous)
+          .fill(.white.opacity(0.18))
+      }
+    }
+    .frame(width: size, height: size)
   }
 
   private var sidebar: some View {
     VStack(alignment: .leading, spacing: 0) {
       HStack(spacing: 6) {
-        RoundedRectangle(cornerRadius: 7, style: .continuous)
-          .fill(
-            LinearGradient(
-              colors: [.white.opacity(0.3), .white.opacity(0.08)],
-              startPoint: .topLeading,
-              endPoint: .bottomTrailing
-            )
-          )
-          .overlay(
-            RoundedRectangle(cornerRadius: 7, style: .continuous)
-              .strokeBorder(.white.opacity(0.22), lineWidth: 0.5)
-          )
-          .overlay(
-            Image(systemName: "chart.xyaxis.line")
-              .font(.system(size: 11, weight: .bold))
-              .foregroundStyle(.white)
-          )
-          .frame(width: 20, height: 20)
+        brandMark(size: 20)
         Text("Supply Sync")
           .font(.system(size: 12, weight: .heavy))
           .foregroundStyle(.white)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../theme/app_colors.dart';
+import 'app_logo.dart';
 
 /// App bar Supply Sync: gradasi navy dengan sudut bawah membulat, logo atau
 /// tombol kembali di kiri, judul + subjudul, dan tombol aksi bergaya kaca.
@@ -72,7 +73,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
                       onPressed: () => Navigator.of(context).maybePop(),
                     )
                   else
-                    const _BrandMark(),
+                    const AppLogo(size: 40),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -118,31 +119,6 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _BrandMark extends StatelessWidget {
-  const _BrandMark();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withValues(alpha: 0.24),
-            Colors.white.withValues(alpha: 0.08),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-      ),
-      child: const Icon(Icons.insights_rounded, color: Colors.white, size: 22),
     );
   }
 }

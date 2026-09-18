@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../data/auth_repository.dart';
 import '../models/app_user.dart';
 import '../theme/app_colors.dart';
+import '../widgets/app_logo.dart';
 import 'app_navigation.dart';
 
 /// Layar pembuka: logo muncul sebentar sambil memulihkan sesi login.
@@ -76,25 +77,7 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ScaleTransition(
-                scale: _logo,
-                child: Container(
-                  width: 96,
-                  height: 96,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(28),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.insights_rounded,
-                    color: Colors.white,
-                    size: 52,
-                  ),
-                ),
-              ),
+              ScaleTransition(scale: _logo, child: const AppLogo(size: 96)),
               const SizedBox(height: 24),
               FadeTransition(
                 opacity: _text,
